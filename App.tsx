@@ -48,7 +48,7 @@ const App = () => {
   };
 
 
-  const _renderItem=(  {item}:) =>{
+  const _renderItem=(  {item}:ListRenderItemInfo<string>) =>{
     (
       <View style={styles.itemContainer}>
         <Text style={styles.itemLabel}>{`Item ${item}`}</Text>
