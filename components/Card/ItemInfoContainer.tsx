@@ -1,47 +1,48 @@
-import React, { useRef, useState, useEffect } from 'react';
-import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
+import React from 'react';
 import {
   View,
   Text,
-  Dimensions,
   StyleSheet,
-  TouchableOpacity,
-  Image,
 } from 'react-native';
-import ImagesCarousel from './CarouselComponent';
-import { useTailwind } from 'tailwind-rn/dist';
 
-const { width: screenWidth ,height:screenHeight} = Dimensions.get('window');
 
-export const ItemInfoContainer = (item) => {
-	const tailwind = useTailwind();
+export const ItemInfoContainer = ({item}) => {
 
 return <View style={styles.bigContainer}>
    <View style={styles.characteristic}>
   <Text style={styles.fieldLabel}>Price:</Text>
-  <Text style={[styles.fieldLabel,styles.bold]}>{item.Price}</Text>
+  <Text style={[styles.fieldLabel,styles.bold]}>{item.price}</Text>
   </View>
+
   <View style={styles.characteristic}>
   <Text style={styles.fieldLabel}>Surface:</Text>
-  <Text style={styles.fieldLabel}>{item.Price+" mp"}</Text>
+  <Text style={styles.fieldLabel}>{item.size}</Text>
   </View>
+
   <View style={styles.characteristic}>
   <Text style={styles.fieldLabel}>Rooms:</Text>
   <Text style={styles.fieldLabel}>{item.rooms}</Text>
   </View>
+
   <View style={styles.characteristic}>
   <Text style={styles.fieldLabel}>Type:</Text>
   <Text style={styles.fieldLabel}>{item.type}</Text>
   </View>
+
   <View style={styles.characteristic}>
   <Text style={styles.fieldLabel}>Level:</Text>
   <Text style={styles.fieldLabel}>{item.level}</Text>
   </View>
+  
   <View style={styles.characteristic}>
   <Text style={styles.fieldLabel}>Location:</Text>
   <Text style={styles.fieldLabel}>{item.location}</Text>
   </View>
- 
+
+  <View style={styles.characteristic}>
+  <Text style={styles.fieldLabel}>Neighborhood:</Text>
+  <Text style={styles.fieldLabel}>{item.neighborhood}</Text>
+  </View>
 
     </View>
     

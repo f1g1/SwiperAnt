@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
-import MyCarousel from './components/CarouselComponent';
-import { ItemCard } from './components/ItemCard';
+import MyCarousel from './components/Card/CarouselComponent';
+import { ItemCard } from './components/Card/ItemCard';
 
 
 export type Props = {

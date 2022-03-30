@@ -33,10 +33,9 @@ const ENTRIES1 = [
 ];
 const { width: screenWidth } = Dimensions.get('window');
 
-export const MyCarousel = () => {
+export const MyCarousel = ({images}) => {
   const carouselRef = useRef();
   console.log("hahaha")
-  const [entries, setEntries] = useState([]);
 
   const goForward = () => {
     console.log("HAHAHA FFF")
@@ -46,10 +45,6 @@ export const MyCarousel = () => {
     console.log("HAHAHA bbb")
     carouselRef?.current?.snapToPrev();
   };
-
-  useEffect(() => {
-    setEntries(ENTRIES1);
-  }, []);
   const renderItem = ({ item, index }) => {
     return (
       <View >
@@ -58,11 +53,9 @@ export const MyCarousel = () => {
             width: 500,
             height: 350,
           }}
-          source={{ uri: item.image }}
+          source={{ uri: item }}
         />
-        <Text numberOfLines={2}>
-          {item.title}
-        </Text>
+       
       </View>
     );
   };
@@ -73,7 +66,7 @@ export const MyCarousel = () => {
         ref={carouselRef}
         sliderWidth={screenWidth}
         itemWidth={screenWidth - 60}
-        data={entries}
+        data={images}
         renderItem={renderItem}
         layout="default"
         scrollEnabled={false}
