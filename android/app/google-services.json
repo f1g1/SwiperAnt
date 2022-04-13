@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "826246121192",
+    "project_id": "swiperant",
+    "storage_bucket": "swiperant.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:826246121192:android:4fe28a178fc1b15f252b5d",
+        "android_client_info": {
+          "package_name": "com.swiperant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "826246121192-eklnj2duuegde9i28t5nq9keiunms7iq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwuDgHu3YMeKQYSg7eEvsUSy8G9BUOAYY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "826246121192-eklnj2duuegde9i28t5nq9keiunms7iq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
