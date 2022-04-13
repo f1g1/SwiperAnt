@@ -1,4 +1,5 @@
 {
   "name": "SwiperAnt",
-  "displayName": "SwiperAnt"
+  "displayName": "SwiperAnt",
+  "plugins": ["@react-native-google-signin/google-signin"]
 }
