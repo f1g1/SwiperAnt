@@ -3,11 +3,10 @@ import { View, Button, Alert, StyleSheet, Dimensions, KeyboardAvoidingView } fro
 import { useForm, Controller } from "react-hook-form";
 import { RadioButton, TextInput, Text } from "react-native-paper";
 import DropDown from "react-native-paper-dropdown";
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import MapComponent from "./MapComponent";
 
 
 const CurrencyList = [
@@ -86,27 +85,29 @@ export default function InitialForm({ onSubmit }) {
                     name="SizeCategory"
                 />
 
-<MapView
-       provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-       style={styles.map}
-       region={{
-         latitude: 37.78825,
-         longitude: -122.4324,
-         latitudeDelta: 0.015,
-         longitudeDelta: 0.0121,
-       }}
-     >
-     </MapView>
-                <Button title="Submit" onPress={handleSubmit(onSubmit)} />
+
             </View>
+            <MapComponent />
+            {/* <Button title="Submit" onPress={handleSubmit(onSubmit)} /> */}
         </KeyboardAwareScrollView>
 
     );
 }
 
 const styles = StyleSheet.create({
+    button: {
+        position: "absolute",
+        top: 10,
+        zIndex: 3000
+    },
     container: {
         flex: 1,
+        backgroundColor: "grey"
+    },
+    containerMap: {
+        ...StyleSheet.absoluteFillObject,
+        flex: 1,
+        minHeight: 450,
         backgroundColor: "grey"
     },
     container1: {
@@ -124,5 +125,5 @@ const styles = StyleSheet.create({
     },
     map: {
         ...StyleSheet.absoluteFillObject,
-      },
+    },
 })
