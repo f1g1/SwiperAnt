@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from 'react'
-import { PointPropType, View } from 'react-native'
+import { View } from 'react-native'
 import { Text } from 'react-native-paper'
-import { Button, Alert, StyleSheet, Dimensions, KeyboardAvoidingView } from "react-native";
+import { Button, StyleSheet, } from "react-native";
 import MapView, { Circle, PROVIDER_GOOGLE } from "react-native-maps";
 
-export default function MapComponent() {
-    const [points, setPoints] = useState([])
-    const [region, setRegion] = useState({})
+export default function MapComponent(props) {
+    const [region, setRegion] = useState({
+        latitude: 46.77597673723042,
+        longitude: 23.593140829806252,
+    })
     const [radius, setRadius] = useState(1000)
     const [lockedRegion, setLockedRegion] = useState()
 
-    const handleSubmit = () => {
-        setLockedRegion({ ...region, radius })
+    const handleLock = () => {
+        setLockedRegion({ ...region })
         if (lockedRegion)
             console.log(lockedRegion)
+    }
+
+    const handleSave = () => {
+        props.setPoints([...props.points, { ...lockedRegion, radius }]);
+        setLockedRegion(null);
     }
     const increaseRadius = () => {
         setRadius(radius * 2);
@@ -21,11 +28,15 @@ export default function MapComponent() {
     const decreaseRadius = () => {
         setRadius(radius / 2);
     }
+    const handleCancel = () => {
+        setLockedRegion(null);
+    }
 
     useEffect(() => {
-        console.log(points);
-    }, [points])
-
+        props.points.forEach(x => {
+            console.log(x.radius);
+        })
+    }, [props.points])
     return (
         <>
             <View style={StyleSheet.absoluteFillObject}>
@@ -41,17 +52,28 @@ export default function MapComponent() {
                         longitudeDelta: 0.0121,
                     }}
                 >
-                    {lockedRegion &&
+                    <>
+                        {lockedRegion &&
+                            <Circle
+                                radius={radius}
+                                center={lockedRegion}
+                                strokeWidth={1}
+                                strokeColor={'#1a66ff'}
+                                fillColor={'rgba(230,238,255,0.5)'}
+                            />
+                        }
+                        {props.points && props.points.map((point, i) => (
+                            <Circle
+                                key={"circle" + i}
+                                radius={point.radius}
+                                center={point}
+                                strokeWidth={1}
+                                strokeColor={'#1a66ff'}
+                                fillColor={'rgba(50,238,10,0.1)'}
+                            />
+                        ))}
+                    </>
 
-                        <Circle
-                            radius={radius}
-                            center={lockedRegion}
-                            strokeWidth={1}
-                            strokeColor={'#1a66ff'}
-                            fillColor={'rgba(230,238,255,0.5)'}
-
-                        />
-                    }
                 </MapView>
                 <View style={{
                     position: "absolute",
@@ -63,33 +85,33 @@ export default function MapComponent() {
                     alignItems: "center",
 
                 }}>
-                    <Text style={{ color: "red" }}>x</Text>
+                    <Text >o</Text>
                 </View>
 
 
 
             </View>
             {!lockedRegion ? (
-                <Button title="Lock" onPress={handleSubmit} />
+                <Button title="Add region" onPress={handleLock} />
 
 
             ) : <View style={{ flex: 1, flexDirection: "row" }}>
 
-                <View style={{ width: "40%" }}>
-                    <Button title="Save" onPress={handleSubmit} />
-
+                <View style={{ width: "30%", marginRight: 40 }}>
+                    <Button title="Save" onPress={handleSave} />
                 </View>
 
-                <View style={{ width: "20%" }}>
+                <View style={{ width: "10%", marginRight: 10 }}>
                     <Button color="grey" title="+" onPress={increaseRadius} />
+                </View>
+
+                <View style={{ width: "10%", marginRight: 40 }}>
                     <Button color="black" title="-" onPress={decreaseRadius} />
                 </View>
-                <View style={{ width: "40%" }}>
-                    <Button color={"red"} title="Cancel" onPress={handleSubmit} />
 
+                <View style={{ width: "30%" }}>
+                    <Button color={"red"} title="Cancel" onPress={handleCancel} />
                 </View>
-
-
             </View>}
 
 

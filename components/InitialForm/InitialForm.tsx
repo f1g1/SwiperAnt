@@ -9,21 +9,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import MapComponent from "./MapComponent";
 
 
-const CurrencyList = [
-    {
-        label: "RON",
-        value: "ron",
-    },
-    {
-        label: "EUR",
-        value: "eur",
-    },
-    {
-        label: "USD",
-        value: "usd",
-    },
-];
-
 const schema = yup.object({
     PriceCategory: yup.number().positive().integer().required(),
     SizeCategory: yup.number().positive().integer().required(),
@@ -34,67 +19,85 @@ export default function InitialForm({ onSubmit }) {
     const { control, handleSubmit, formState: { errors }, setValue } = useForm({
         resolver: yupResolver(schema)
     });
+    const [points, setPoints] = useState([])
+
 
     return (
         <KeyboardAwareScrollView>
+            <View style={styles.containerMap} >
+                <MapComponent setPoints={setPoints} points={points} />
+            </View>
+            <View>
+                <View style={styles.container}>
+                    <Text style={styles.groupText}>
+                        What price are you willing to pay?
+                    </Text>
+                    <Controller
+                        control={control}
+                        defaultValue="1"
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <RadioButton.Group onValueChange={onChange} value={value} >
+                                <View >
+                                    <Text>Cheapest</Text>
+                                    <RadioButton value="0" />
+                                </View>
+                                <View >
+                                    <Text >Moderate</Text>
+                                    <RadioButton value="1" />
+                                </View>
+                                <View >
+                                    <Text >Expensive</Text>
+                                    <RadioButton value="2" />
+                                </View>
+                            </RadioButton.Group>
 
-            <View style={styles.container}>
-                <Controller
-                    control={control}
-                    defaultValue="1"
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <RadioButton.Group onValueChange={onChange} value={value} >
-                            <View style={styles.container1}>
-                                <Text style={styles.errorText}>Cheapest</Text>
-                                <RadioButton value="0" />
-                            </View>
-                            <View style={styles.container1}>
-                                <Text style={styles.errorText}>Moderate</Text>
-                                <RadioButton value="1" />
-                            </View>
-                            <View style={styles.container1}>
-                                <Text style={styles.errorText}>Expensive</Text>
-                                <RadioButton value="2" />
-                            </View>
-                        </RadioButton.Group>
 
 
+                        )}
+                        name="PriceCategory"
+                    />
+                    <Text style={styles.groupText}>
+                        How big do you want your space to be?
+                    </Text>
+                    <Controller
+                        control={control}
+                        defaultValue="1"
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <RadioButton.Group onValueChange={onChange} value={value}  >
+                                <View  >
+                                    <Text >Small</Text>
+                                    <View style={{ flex: 1 }}>
+                                        <RadioButton.Android value="0" />
+                                    </View>
 
-                    )}
-                    name="PriceCategory"
-                />
-                <Controller
-                    control={control}
-                    defaultValue="1"
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <RadioButton.Group onValueChange={onChange} value={value} >
-                            <View style={styles.container1}>
-                                <Text style={styles.errorText}>Small</Text>
-                                <RadioButton value="0" />
-                            </View>
-                            <View style={styles.container1}>
-                                <Text style={styles.errorText}>Medium</Text>
-                                <RadioButton value="1" />
-                            </View>
-                            <View style={styles.container1}>
-                                <Text style={styles.errorText}>Spatious</Text>
-                                <RadioButton value="2" />
-                            </View>
-                        </RadioButton.Group>
-                    )}
-                    name="SizeCategory"
-                />
-
+                                </View>
+                                <View >
+                                    <Text >Medium</Text>
+                                    <RadioButton value="1" />
+                                </View>
+                                <View >
+                                    <Text>Huge</Text>
+                                    <RadioButton value="2" />
+                                </View>
+                            </RadioButton.Group>
+                        )}
+                        name="SizeCategory"
+                    />
+                </View>
 
             </View>
-            <MapComponent />
-            {/* <Button title="Submit" onPress={handleSubmit(onSubmit)} /> */}
+
         </KeyboardAwareScrollView>
 
     );
 }
 
 const styles = StyleSheet.create({
+    groupText: {
+        borderBottomWidth: 1,
+        marginBottom: 5,
+        fontSize: 20
+    },
     button: {
         position: "absolute",
         top: 10,
@@ -102,16 +105,16 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: "grey"
+        backgroundColor: "grey",
+        paddingHorizontal: 10
     },
     containerMap: {
-        ...StyleSheet.absoluteFillObject,
         flex: 1,
-        minHeight: 450,
+        minHeight: 430,
         backgroundColor: "grey"
     },
     container1: {
-        flex: 1,
+        width: 100
     },
     input: {
         height: 40,
