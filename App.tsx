@@ -43,6 +43,7 @@ function App() {
               />
               :
               <>
+              {}
                 <Stack.Screen
                   name="InitialForm"
                   component={InitialForm}

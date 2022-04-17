@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { View, Button, Alert, StyleSheet, Dimensions, KeyboardAvoidingView } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { RadioButton, TextInput, Text } from "react-native-paper";
-import DropDown from "react-native-paper-dropdown";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import MapComponent from "./MapComponent";
+import { PostInitialForm } from "../../services/InitialFormService";
 
 
 const schema = yup.object({
@@ -15,12 +15,21 @@ const schema = yup.object({
 
 });
 
-export default function InitialForm({ onSubmit }) {
+export default function InitialForm() {
     const { control, handleSubmit, formState: { errors }, setValue } = useForm({
         resolver: yupResolver(schema)
     });
     const [points, setPoints] = useState([])
 
+
+    const onSubmit=(data)=>{
+        const output = {
+            ...data,
+           locations:JSON.stringify(points)
+          }
+          console.log(output);
+          PostInitialForm(output);
+    }
 
     return (
         <KeyboardAwareScrollView>
@@ -84,8 +93,8 @@ export default function InitialForm({ onSubmit }) {
                         name="SizeCategory"
                     />
                 </View>
-
             </View>
+            <Button title="Submit" onPress={handleSubmit(onSubmit)} color="green" />
 
         </KeyboardAwareScrollView>
 
@@ -110,7 +119,7 @@ const styles = StyleSheet.create({
     },
     containerMap: {
         flex: 1,
-        minHeight: 430,
+        minHeight: 390,
         backgroundColor: "grey"
     },
     container1: {
