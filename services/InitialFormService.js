@@ -16,6 +16,23 @@ export function PostInitialForm(initialForm) {
         .catch(function (error) {
             console.log(JSON.stringify(error));
         });
-
-
 }
+
+export function UserHasInitialForm() {
+    var axios = require('axios');
+    var config = {
+        method: 'get',
+        url: baseUrl,
+        headers: {}
+    };
+
+    return axios(config)
+        .then(function (response) {
+            console.log(JSON.stringify(response.data));
+            return response
+        })
+        .catch(function (error) {
+            console.log(JSON.stringify(error));
+        });
+}
+
