@@ -9,6 +9,7 @@ import {
 import auth from '@react-native-firebase/auth';
 
 import { AuthContext } from '../../App';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Login() {
   const { dispatch } = React.useContext(AuthContext);
@@ -24,13 +25,12 @@ function Login() {
       const googleCredential = auth.GoogleAuthProvider.credential(userInfo.idToken);
       await auth().signInWithCredential(googleCredential);
       let idToken = await auth().currentUser?.getIdToken();
-
-      console.log("idToken", idToken)
-      // userInfo.idToken=tokens.idToken;
+      let timestamp = new Date(new Date().getTime() - 60000);
       dispatch({
         type: "LOGIN",
-        payload: { ...userInfo, idToken }
+        payload: { ...userInfo,timestamp, idToken }
       })
+      await AsyncStorage.setItem("user", JSON.stringify({ ...userInfo, timestamp }));
     } catch (error) {
       console.log(error)
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
