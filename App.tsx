@@ -8,6 +8,7 @@ import InitialForm from './components/InitialForm/InitialForm';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { UserHasInitialForm } from './services/InitialFormService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AddItem from './components/AddItem/Index';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,23 +23,23 @@ const initialState = {
 
 function App() {
   const [state, dispatch] = React.useReducer(AuthReducer, initialState);
-  const [hasForm, sethasForm] = useState(false) 
+  const [hasForm, sethasForm] = useState(null)
 
   useEffect(() => {
-    let user = AsyncStorage.getItem("user",x=>{
-     x && console.log("user from Async",JSON.parse(x))
-      x&&
-      dispatch({
-        type: "LOGIN",
-        payload: JSON.parse(x)
-      });
+    let user = AsyncStorage.getItem("user", x => {
+      x && console.log("user from Async", JSON.parse(x))
+      x &&
+        dispatch({
+          type: "LOGIN",
+          payload: JSON.parse(x)
+        });
     });
 
   }, [])
 
   useEffect(() => {
-    if (state.isAuthenticated){
-      UserHasInitialForm().then(x=>sethasForm(x));
+    if (state.isAuthenticated) {
+      UserHasInitialForm().then(x => sethasForm(x));
     }
 
   }, [state])
@@ -61,16 +62,22 @@ function App() {
               />
               :
               <>
-              {!hasForm &&
-                <Stack.Screen
-                  name="InitialForm"
-                  component={InitialForm}
-                  options={{ title: 'Initial Form' }}
-                />}
+                {hasForm != null && !hasForm &&
+                  <Stack.Screen
+                    name="InitialForm"
+                    component={InitialForm}
+                    options={{ title: 'Initial Form' }}
+                  />}
                 <Stack.Screen
                   name="Home"
                   component={SwipeHome}
                   options={{ title: 'Home' }}
+                />
+
+                <Stack.Screen
+                  name="AddEntry"
+                  component={AddItem}
+                  options={{ title: 'Add new ' }}
                 />
 
               </>
