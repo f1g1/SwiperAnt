@@ -4,7 +4,6 @@ import axios from 'axios';
 
 
 export const AuthReducer = (state, action) => {
-  console.log(action.payload)
   switch (action.type) {
     case "LOGIN":
       axios.defaults.headers.common = { 'Authorization': `Bearer ${action.payload.idToken}` }
@@ -20,6 +19,14 @@ export const AuthReducer = (state, action) => {
         isAuthenticated: false,
         user: null
       };
+
+      case "CONNECT_SIGNALR":
+        console.log("CONNECT_SIGNALR",action.payload)
+        return {
+          ...state,
+          hasSignalr:true,
+          signalrConnection:{...action.payload}
+        }
    
     default:
       return state;

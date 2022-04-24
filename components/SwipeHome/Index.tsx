@@ -1,46 +1,31 @@
 import React, { useEffect } from 'react'
 import { Text } from 'react-native-paper'
 import { AuthContext } from '../../App';
-import { testtoken } from '../../services/test';
 import { StyleSheet, View } from 'react-native';
-const signalR = require("@microsoft/signalr");
+import { GetSignalrConnection } from '../../services/SignalRService';
+import { HubConnection } from '@microsoft/signalr';
 
 function SwipeHome() {
   const { state: authState } = React.useContext(AuthContext);
 
+
+
+
   useEffect(() => {
-    const connection = new signalR.HubConnectionBuilder()
-    .withUrl("http://192.168.1.179:5055/chatHub", {
-      skipNegotiation: true,
-      transport: signalR.HttpTransportType.WebSockets,
-      accessTokenFactory: () => authState.idToken,
-    })
-    .withAutomaticReconnect()
-    .configureLogging(signalR.LogLevel.Debug)
-    .build();
-
-    connection.start().then(function () {
-      console.log('Connected!');
-  }).catch(function (err) {
-      return console.error(err.toString());
-  });
-
-  connection.on("BroadcastMessage", (type: string, payload: string) => {
-    console.log(type,payload)
-  });
-
-  testtoken(authState.token)
-  }, [])
 
 
-  
+    if (authState.hasSignalr){
+      let connection=GetSignalrConnection()
+      console.log("has signalr, add ON Broadcast")
+      connection.on("BroadcastMessage", (user, message)=>{
+        console.log(user,message);} )
+      connection.invoke("TestMethod",'Test')
+    
+      }
 
-  // const onrender = () => {
-    // 
-  // }
-  // useEffect(() => {
-  //   onrender()
-  // }, [])
+    
+   
+  }, [authState])
 
 
 

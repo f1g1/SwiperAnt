@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Text, View, Button, Alert, StyleSheet, Dimensions } from "react-native";
+import { Text, View, Button, Alert, StyleSheet, Dimensions, ScrollView, StatusBar } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { TextInput } from "react-native-paper";
 import DropDown from "react-native-paper-dropdown";
 import AddItemForm from "./AddItemForm";
+import ImageForm from "./ImageForm";
+import { SafeAreaView } from "react-native-safe-area-context";
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 const genderList = [
@@ -22,31 +24,26 @@ const genderList = [
 ];
 
 export default function AddItem() {
+  const [images, setImages] = useState([])
+
   const onSubmit = data => console.log(data);
 
   return (
-    <View style={styles.container}>
-     <AddItemForm onSumbit={onSubmit}/>
-    </View>
+
+    <AddItemForm onSumbit={onSubmit} />
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: screenWidth,
-    display: "flex",
-    justifyContent: "space-between",
-    backgroundColor: "white"
+    flex: 1,
+    paddingTop: StatusBar.currentHeight,
   },
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    color: "black",
+  scrollView: {
+    backgroundColor: 'pink',
   },
-  errorText: {
-    color: "red"
+  text: {
+    fontSize: 42,
   }
 
 })
