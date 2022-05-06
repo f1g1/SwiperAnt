@@ -9,13 +9,21 @@ export default function MapComponent(props) {
         latitude: 46.77597673723042,
         longitude: 23.593140829806252,
     })
-    const [radius, setRadius] = useState(1000)
+    const [radius, setRadius] = useState(props.single ? 200 : 1000)
     const [lockedRegion, setLockedRegion] = useState()
 
     const handleLock = () => {
+
+        if (props.single) {
+            console.log("radius props single",radius)
+            props.setPoints([{ ...region, Radius:radius }])
+            setLockedRegion(null);
+            setTimeout(() => { props.setOpenMap?.(false);   }, 200);
+            return;
+           
+        }
         setLockedRegion({ ...region })
-        if (lockedRegion)
-            console.log(lockedRegion)
+
     }
 
     const handleSave = () => {
@@ -31,12 +39,6 @@ export default function MapComponent(props) {
     const handleCancel = () => {
         setLockedRegion(null);
     }
-
-    useEffect(() => {
-        props.points.forEach(x => {
-            console.log(x.radius);
-        })
-    }, [props.points])
     return (
         <>
             <View style={StyleSheet.absoluteFillObject}>
@@ -89,10 +91,9 @@ export default function MapComponent(props) {
                 </View>
 
 
-
             </View>
             {!lockedRegion ? (
-                <Button title="Add region" onPress={handleLock} />
+                <Button title={props.single ? "Set and go back" : "Add region"} onPress={handleLock} />
 
 
             ) : <View style={{ flex: 1, flexDirection: "row" }}>
@@ -119,4 +120,5 @@ export default function MapComponent(props) {
     )
 }
 const styles = StyleSheet.create({
+
 })

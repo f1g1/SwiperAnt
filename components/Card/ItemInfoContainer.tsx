@@ -36,7 +36,7 @@ return <View style={styles.bigContainer}>
   
   <View style={styles.characteristic}>
   <Text style={styles.fieldLabel}>Location:</Text>
-  <Text style={styles.fieldLabel}>{item.location}</Text>
+  <Text style={styles.fieldLabel}>{item.City}</Text>
   </View>
 
   <View style={styles.characteristic}>

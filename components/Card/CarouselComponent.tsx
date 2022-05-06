@@ -31,12 +31,13 @@ const ENTRIES1 = [
     image: 'https://i.imgur.com/2nCt3Sbl.jpg',
   },
 ];
+
+const baseUrl = 'http://192.168.1.104:5055/';
+
 const { width: screenWidth } = Dimensions.get('window');
 
-export const MyCarousel = ({images}) => {
+export const MyCarousel = ({ images }) => {
   const carouselRef = useRef();
-  console.log("hahaha")
-
   const goForward = () => {
     console.log("HAHAHA FFF")
     carouselRef?.current?.snapToNext();
@@ -46,6 +47,7 @@ export const MyCarousel = ({images}) => {
     carouselRef?.current?.snapToPrev();
   };
   const renderItem = ({ item, index }) => {
+    console.log("item", item)
     return (
       <View >
         <Image
@@ -53,9 +55,9 @@ export const MyCarousel = ({images}) => {
             width: 500,
             height: 350,
           }}
-          source={{ uri: item }}
+          source={{ uri: baseUrl + item.path }}
         />
-       
+
       </View>
     );
   };
@@ -74,10 +76,10 @@ export const MyCarousel = ({images}) => {
 
       <TouchableOpacity style={[styles.arrow, styles.leftArrow]}
         onPress={goBackwards}>
-          <Text> {"<---"} </Text>
+        <Text> {"<---"} </Text>
       </TouchableOpacity>
       <TouchableOpacity style={[styles.arrow, styles.rightArrow]} onPress={goForward} >
-          <Text>{"--->"}</Text>
+        <Text>{"--->"}</Text>
       </TouchableOpacity>
     </View>
   );

@@ -7,10 +7,10 @@ import { AuthReducer } from './components/reducers/AuthContext';
 import InitialForm from './components/InitialForm/InitialForm';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { UserHasInitialForm } from './services/InitialFormService';
-import AddItem from './components/AddItem/Index';
 import { HandleSignalr as ConnectSignalr } from './services/SignalRService';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import AddItemForm from './components/AddItem/AddItemForm';
 
 const Stack = createNativeStackNavigator();
 
@@ -87,7 +87,7 @@ function App() {
                 <Tab.Navigator screenOptions={{
                   tabBarHideOnKeyboard: true
                 }} initialRouteName='Home'>
-                  <Tab.Screen name="Add" component={AddItem} tabBarIcon="home" />
+                  <Tab.Screen name="Add" component={AddItemForm} tabBarIcon="home" />
                   <Tab.Screen name="Home" component={SwipeHome} />
                 </Tab.Navigator>
 

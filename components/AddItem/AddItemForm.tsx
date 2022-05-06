@@ -3,14 +3,13 @@ import { Text, View, Button, Alert, StyleSheet, Dimensions } from "react-native"
 import { useForm, Controller } from "react-hook-form";
 import { TextInput } from "react-native-paper";
 import DropDown from "react-native-paper-dropdown";
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { PostRentItem } from "../../services/RentItemService";
 import ImageForm from "./ImageForm";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { data } from "browserslist";
+import MapComponent from "../InitialForm/MapComponent";
 
 
 const CurrencyList = [
@@ -43,14 +42,16 @@ const schema = yup.object({
 export default function AddItemForm() {
     const [showDropDown, setShowDropDown] = useState(false);
     const [imagesCount, setImagesCount] = useState(0)
+    const [points, setPoints] = useState([])
     const [openGallery, setOpenGallery] = useState(false)
+    const [openMap, setOpenMap] = useState(false)
     const { control, handleSubmit, formState: { errors }, setValue } = useForm({
         resolver: yupResolver(schema)
     });
     const onSubmit = (data) => {
-        PostRentItem(data)
-    };
+        PostRentItem({ ...data, Location: data.Location[0] })
 
+    };
 
     const HandleImageChange = (onChange, images) => {
         onChange(images)
@@ -59,175 +60,187 @@ export default function AddItemForm() {
     return (
         <SafeAreaView style={styles.container}>
 
-            {openGallery ?
+            {openMap &&
+                <Controller
+                    control={control}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <View style={styles.containerMap}>
+                            <MapComponent setPoints={onChange} points={value || []} single setOpenMap={setOpenMap} />
+                        </View>
+                    )}
+                    name="Location"
+                />}
+
+            {openGallery &&
                 <Controller
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
                         <ImageForm images={value || []} setImages={x => HandleImageChange(onChange, x)} setOpen={setOpenGallery} />
                     )}
                     name="Images"
-                />
-                :
-                <>
+                />}
+            {openGallery || openMap ||
+                <KeyboardAwareScrollView >
+                    {imagesCount < 3 &&
+                        <Text style={styles.errorText}>At least 3 images are needed, add {3 - imagesCount} images to submit entry </Text>}
                     <Button title={"Open Gallery " + "( " + imagesCount + " photos added)"} onPress={() => setOpenGallery(true)} />
+                    <Button title={"Open Map"} onPress={() => setOpenMap(true)} />
                     <Text style={styles.errorText}>{errors.Images?.message}</Text>
-                    <KeyboardAwareScrollView >
-                        <Controller
-                            control={control}
-                            rules={{
-                                min: 0,
-                                required: true,
-                            }}
-                            render={({ field: { onChange, onBlur, value } }) => (
-                                <TextInput
-                                    keyboardType='number-pad'
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value}
-                                    label={"Price"}
-                                />
-                            )}
-                            name="Price"
-                        />
-                        <Text style={styles.errorText}>{errors.Price?.message}</Text>
-                        <Controller
-                            control={control}
-                            rules={{
-                                required: true,
-                            }}
-                            render={({ field: { onChange, onBlur, value }, }) => (
-                                <DropDown
-                                    label={"Currency"}
-                                    visible={showDropDown}
-                                    showDropDown={() => setShowDropDown(true)}
-                                    onDismiss={() => setShowDropDown(false)}
-                                    value={value}
-                                    list={CurrencyList}
-                                    setValue={(v) => setValue("Currency", v)}
-                                />
-                            )}
-                            name="Currency"
-                        />
-                        <Text style={styles.errorText}>{errors.Currency?.message}</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            min: 0,
+                            required: true,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                keyboardType='number-pad'
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                label={"Price"}
+                            />
+                        )}
+                        name="Price"
+                    />
+                    <Text style={styles.errorText}>{errors.Price?.message}</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            required: true,
+                        }}
+                        render={({ field: { onChange, onBlur, value }, }) => (
+                            <DropDown
+                                label={"Currency"}
+                                visible={showDropDown}
+                                showDropDown={() => setShowDropDown(true)}
+                                onDismiss={() => setShowDropDown(false)}
+                                value={value}
+                                list={CurrencyList}
+                                setValue={(v) => setValue("Currency", v)}
+                            />
+                        )}
+                        name="Currency"
+                    />
+                    <Text style={styles.errorText}>{errors.Currency?.message}</Text>
 
 
-                        <Controller
-                            control={control}
-                            rules={{
-                                maxLength: 100,
-                            }}
-                            render={({ field: { onChange, onBlur, value } }) => (
-                                <TextInput
-                                    keyboardType='number-pad'
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value}
-                                    label={"Surface (MP)"}
-                                />
-                            )}
-                            name="Surface"
-                        />
-                        <Text style={styles.errorText}>{errors.Surface && "Surface must be a positive number"}</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            maxLength: 100,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                keyboardType='number-pad'
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                label={"Surface (MP)"}
+                            />
+                        )}
+                        name="Surface"
+                    />
+                    <Text style={styles.errorText}>{errors.Surface && "Surface must be a positive number"}</Text>
 
-                        <Controller
-                            control={control}
-                            rules={{
-                                maxLength: 100,
-                            }}
-                            render={({ field: { onChange, onBlur, value } }) => (
-                                <TextInput
-                                    keyboardType='number-pad'
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value}
-                                    label={"Rooms Number"}
-                                />
-                            )}
-                            name="Rooms"
-                        />
-                        <Text style={styles.errorText}>{errors.Rooms && "Rooms number must be a positive number"}</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            maxLength: 100,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                keyboardType='number-pad'
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                label={"Rooms Number"}
+                            />
+                        )}
+                        name="Rooms"
+                    />
+                    <Text style={styles.errorText}>{errors.Rooms && "Rooms number must be a positive number"}</Text>
 
-                        <Controller
-                            control={control}
-                            rules={{
-                                maxLength: 100,
-                            }}
-                            render={({ field: { onChange, onBlur, value } }) => (
-                                <TextInput
-                                    placeholder="e.g.'Decomadat'"
-                                    placeholderTextColor={"grey"}
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value}
-                                    label={"Type"}
-                                />
-                            )}
-                            name="Type"
-                        />
-                        <Text style={styles.errorText}>{errors.Type?.message}</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            maxLength: 100,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                placeholder="e.g.'Decomadat'"
+                                placeholderTextColor={"grey"}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                label={"Type"}
+                            />
+                        )}
+                        name="Type"
+                    />
+                    <Text style={styles.errorText}>{errors.Type?.message}</Text>
 
-                        <Controller
-                            control={control}
-                            rules={{
-                                maxLength: 100,
-                            }}
-                            render={({ field: { onChange, onBlur, value } }) => (
-                                <TextInput
-                                    placeholder="e.g.'3/4'"
-                                    placeholderTextColor={"grey"}
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value}
-                                    label={"Level"}
-                                />
-                            )}
-                            name="Level"
-                        />
-                        <Text style={styles.errorText}>{errors.Level?.message}</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            maxLength: 100,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                placeholder="e.g.'3/4'"
+                                placeholderTextColor={"grey"}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                label={"Level"}
+                            />
+                        )}
+                        name="Level"
+                    />
+                    <Text style={styles.errorText}>{errors.Level?.message}</Text>
 
-                        <Controller
-                            control={control}
-                            rules={{
-                                maxLength: 100,
-                            }}
-                            defaultValue="Cluj-Napoca"
-                            render={({ field: { onChange, onBlur, value } }) => (
-                                <TextInput
-                                    defaultValue="Cluj-Napoca"
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value}
-                                    label={"City"}
-                                />
-                            )}
-                            name="City"
-                        />
-                        <Text style={styles.errorText}>{errors.City?.message}</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            maxLength: 100,
+                        }}
+                        defaultValue="Cluj-Napoca"
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                defaultValue="Cluj-Napoca"
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                label={"City"}
+                            />
+                        )}
+                        name="City"
+                    />
+                    <Text style={styles.errorText}>{errors.City?.message}</Text>
 
-                        <Controller
-                            control={control}
-                            rules={{
-                                maxLength: 100,
-                            }}
+                    <Controller
+                        control={control}
+                        rules={{
+                            maxLength: 100,
+                        }}
 
-                            render={({ field: { onChange, onBlur, value } }) => (
-                                <TextInput
-                                    placeholder="e.g.'Gheorgheni'"
-                                    placeholderTextColor={"grey"}
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value}
-                                    label={"Neighborhood"}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                placeholder="e.g.'Gheorgheni'"
+                                placeholderTextColor={"grey"}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                label={"Neighborhood"}
 
-                                />
-                            )}
-                            name="Neighborhood"
-                        />
-                    </KeyboardAwareScrollView >
+                            />
+                        )}
+                        name="Neighborhood"
+                    />
 
                     <Text style={styles.errorText}>{errors.Neighborhood?.message}</Text>
                     <Button title="Submit" onPress={handleSubmit(onSubmit)} />
-                </>
+                </KeyboardAwareScrollView >
             }
 
         </SafeAreaView >
@@ -252,5 +265,9 @@ const styles = StyleSheet.create({
     },
     errorText: {
         color: "red"
-    }
+    },
+    containerMap: {
+        minHeight: "100%",
+        backgroundColor: "grey"
+    },
 })
