@@ -1,15 +1,14 @@
-import { FailedToNegotiateWithServerError } from "@microsoft/signalr/dist/esm/Errors";
-import React, { useEffect, useState } from "react";
-import { Text, View, Button, Alert, StyleSheet, Dimensions, Image } from "react-native";
+import React from "react";
+import { Text, View, StyleSheet, Dimensions, Image } from "react-native";
 import DraggableFlatList, { RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { Button } from "react-native-paper";
 
 const Separator = () => (
   <View style={styles.separator} />
 );
-export default function ImageForm({ images, setImages,setOpen }) {
+export default function ImageForm({ images, setImages, setOpen }) {
   const renderItem = ({ item, drag, isActive }: RenderItemParams<any>) => {
     return (
       <ScaleDecorator>
@@ -23,7 +22,7 @@ export default function ImageForm({ images, setImages,setOpen }) {
               style={styles.tinyLogo}
               source={{ uri: item?.uri }}
             />
-            <Button color={"red"} onPress={() => deleteImage(item)} title="Delete!" > </Button>
+            <Button color={"red"} onPress={() => deleteImage(item)} mode="contained" > Delete!</Button>
           </View>
         </TouchableOpacity>
       </ScaleDecorator >
@@ -35,18 +34,13 @@ export default function ImageForm({ images, setImages,setOpen }) {
     setImages(filteredArray)
   }
 
-  useEffect(() => {
-    console.log(images.length)
-  }, [images])
 
   const startCamera = async () => {
     const result = await launchCamera({ mediaType: "photo", quality: 1, cameraType: "back", includeBase64: true });
     if (!result.didCancel && !result.errorCode)
       console.log("succes image camera")
     setImages(images.concat(result.assets));
-
   }
-
 
   const openLibrary = async () => {
     const result = await launchImageLibrary({ mediaType: "photo", quality: 1, selectionLimit: 0, includeBase64: true });
@@ -66,19 +60,18 @@ export default function ImageForm({ images, setImages,setOpen }) {
           onDragEnd={({ data }) => setImages(data)}
           keyExtractor={(item) => item.uri}
           renderItem={renderItem}
-
         />
       </View >
 
       <View style={styles.galleryButton}>
-        <Button title="Open Camera" onPress={startCamera} color="#4331e2"></Button>
+        <Button onPress={startCamera} color="#4331e2" mode='contained'>Camera</Button>
       </View>
       <View style={styles.galleryButton}>
-        <Button title="Open Gallery" onPress={openLibrary}></Button>
+        <Button onPress={openLibrary} mode="contained">Phone Gallery</Button>
       </View>
 
       <View style={styles.backButton}>
-        <Button title="Back" color="red" onPress={()=>setOpen(false)}></Button>
+        <Button onPress={() => setOpen(false)} mode="contained" color="red" >Back</Button>
       </View>
     </>
   );
