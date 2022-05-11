@@ -16,7 +16,7 @@ export default function MapComponent(props) {
 
         if (props.single) {
             console.log("radius props single",radius)
-            props.setPoints([{ ...region, Radius:radius }])
+            props.setPoints([{ ...region, radius:radius }])
             setLockedRegion(null);
             setTimeout(() => { props.setOpenMap?.(false);   }, 200);
             return;

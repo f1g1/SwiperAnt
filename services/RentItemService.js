@@ -1,4 +1,4 @@
-const baseUrl = 'http://192.168.1.104:5055/api/RentItem';
+const baseUrl = 'http://10.0.2.2:5055/api/RentItem';
 
 export function PostRentItem(rentItem) {
 

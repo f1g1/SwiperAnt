@@ -6,7 +6,7 @@ let signalrConnection;
 
 export function HandleSignalr(dispatch,idToken) {
     signalrConnection = new signalR.HubConnectionBuilder()
-        .withUrl("http://192.168.1.104:5055/chatHub", {
+        .withUrl("http://10.0.2.2:5055/chatHub", {
           accessTokenFactory: () => idToken,
         })
         .withAutomaticReconnect()

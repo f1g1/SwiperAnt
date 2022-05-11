@@ -1,4 +1,4 @@
-const baseUrl = 'http://192.168.1.104:5055/api/Users';
+const baseUrl = 'http://10.0.2.2:5055/api/Users';
 
 const config = (token) => {
     return { Authorization: `Bearer ${token}` }

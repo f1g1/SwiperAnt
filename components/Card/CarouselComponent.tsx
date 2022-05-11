@@ -32,9 +32,9 @@ const ENTRIES1 = [
   },
 ];
 
-const baseUrl = 'http://192.168.1.104:5055/';
+const baseUrl = 'http://10.0.2.2:5055/';
 
-const { width: screenWidth } = Dimensions.get('window');
+const { width: screenWidth ,height:screenHeight} = Dimensions.get('window');
 
 export const MyCarousel = ({ images }) => {
   const carouselRef = useRef();
@@ -52,8 +52,7 @@ export const MyCarousel = ({ images }) => {
       <View >
         <Image
           style={{
-            width: 500,
-            height: 350,
+            height: screenHeight-screenHeight*0.65,
           }}
           source={{ uri: baseUrl + item.path }}
         />
@@ -67,7 +66,7 @@ export const MyCarousel = ({ images }) => {
       <Carousel
         ref={carouselRef}
         sliderWidth={screenWidth}
-        itemWidth={screenWidth - 60}
+        itemWidth={screenWidth }
         data={images}
         renderItem={renderItem}
         layout="default"
@@ -87,8 +86,8 @@ export const MyCarousel = ({ images }) => {
 
 const styles = StyleSheet.create({
   arrow: {
-    width: 50,
-    height: 350,
+    height: screenHeight-screenHeight*0.65,
+    width: 30,
     backgroundColor: "grey",
     opacity: 0.3,
     alignItems: "center",
@@ -97,7 +96,6 @@ const styles = StyleSheet.create({
   rightArrow: { position: 'absolute', right: 0 },
   leftArrow: { position: 'absolute', left: 0 },
   carouselContainer: {
-    height: 350,
     backgroundColor: "gray"
   }
 })
