@@ -26,12 +26,24 @@ export function GetMyRentItems() {
     var config = {
         method: 'get',
         url: baseUrl + "/my/",
-        data: {}, 
+        data: {},
         headers: {}
     };
 
-   const promise= axios(config);
-   const dataPromise = promise.then((response) => response.data)
-   return dataPromise
+    const promise = axios(config);
+    const dataPromise = promise.then((response) => response.data)
+    return dataPromise
 
 }
+export function DeleteMyRentItem(id) {
+    var axios = require('axios');
+    var config = {
+        method: 'Delete',
+        url: baseUrl + "/my/" + id,
+        data: {},
+        headers: {}
+    };
+    const promise = axios(config);
+    return promise
+}
+

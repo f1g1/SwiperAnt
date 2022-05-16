@@ -11,6 +11,7 @@ import { HandleSignalr as ConnectSignalr } from './services/SignalRService';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import AddItemForm from './components/AddItem/AddItemForm';
+import MyRentItems from './components/MyRentItems/MyRentItems';
 
 const Stack = createNativeStackNavigator();
 
@@ -89,6 +90,7 @@ function App() {
                 }} initialRouteName='Home'>
                   <Tab.Screen name="Add" component={AddItemForm} tabBarIcon="home" />
                   <Tab.Screen name="Home" component={SwipeHome} />
+                  <Tab.Screen name="My listings" component={MyRentItems} />
                 </Tab.Navigator>
 
               </>
