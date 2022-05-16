@@ -29,6 +29,11 @@ const CurrencyList = [
 
 const schema = yup.object({
     Images: yup.array().min(3).required('At least 3 images are required'),
+    Location: yup.array().required(),
+    Title: yup.string().required()
+        .test('len', 'Must be less than 100 characters', val => val?.length <= 100),
+    Description: yup.string()
+        .test('len', 'Must be less than 500 characters', val => val?.length <= 500),
     Price: yup.number().positive().integer().required('Price is required'),
     Currency: yup.string().required(),
     Surface: yup.number().positive("Surface needs ").required("Surface needs "),
@@ -81,11 +86,49 @@ export default function AddItemForm() {
                 />}
             {openGallery || openMap ||
                 <KeyboardAwareScrollView >
-                    {imagesCount < 3 &&
-                        <Text style={styles.errorText}>At least 3 images are needed, add {3 - imagesCount} images to submit entry </Text>}
+                    {/* {imagesCount < 3 &&
+                        <Text style={styles.errorText}>At least 3 images are needed, add {3 - imagesCount} images to submit entry </Text>} */}
                     <Button title={"Open Gallery " + "( " + imagesCount + " photos added)"} onPress={() => setOpenGallery(true)} />
-                    <Button title={"Open Map"} onPress={() => setOpenMap(true)} />
                     <Text style={styles.errorText}>{errors.Images?.message}</Text>
+                    <Button title={"Open Map"} onPress={() => setOpenMap(true)} />
+                    <Text style={styles.errorText}>{errors.Location?.message}</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            maxLength: 10,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                placeholder="Title'"
+                                placeholderTextColor={"grey"}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                label={"Title"}
+                            />
+                        )}
+                        name="Title"
+                    />
+                    <Text style={styles.errorText}>{errors.Title?.message}</Text>
+
+                    <Controller
+                        control={control}
+                        rules={{
+                            maxLength: 500,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                placeholder="Description"
+                                placeholderTextColor={"grey"}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                label={"Description"}
+                            />
+                        )}
+                        name="Description"
+                    />
+                    <Text style={styles.errorText}>{errors.Description?.message}</Text>
                     <Controller
                         control={control}
                         rules={{

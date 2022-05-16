@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Text } from 'react-native-paper'
 import { AuthContext } from '../../App';
 import { LayoutAnimation, StyleSheet, View } from 'react-native';
 import { GetSignalrConnection } from '../../services/SignalRService';
-import { GetMyRentItems } from '../../services/RentItemService';
 import ItemCard from '../Card/Index';
 
 const axios = require('axios')
-import Animated, {
-  AnimatedLayout,
-} from 'react-native-reanimated';
-import NoMore from './NoMore';
+
 
 const item = { "title": "Apartament 2 camere decomandat Central", "link": "https://www.imobiliare.ro/inchirieri-apartamente/cluj-napoca/central/apartament-de-inchiriat-2-camere-X54N0017J", "location": "Cluj-Napoca", "neighborhood": "zona Central", "rooms": "2 camere", "size": "55 mp utili", "level": "Etaj 2/4", "type": "Decomandat", "price": "350", "images": ["https://img3.imonet.ro/XBSG/BSG00KJNOP4/garsoniera-de-inchiriat-cluj-napoca-ultracentral-152982148.jpg", "https://img3.imonet.ro/XBSG/BSG00KJNOP4/garsoniera-de-inchiriat-cluj-napoca-ultracentral-152982160.jpg", "https://img3.imonet.ro/XBSG/BSG00KJNOP4/garsoniera-de-inchiriat-cluj-napoca-ultracentral-152982156.jpg", "https://img3.imonet.ro/XBSG/BSG00KJNOP4/garsoniera-de-inchiriat-cluj-napoca-ultracentral-152982154.jpg", "https://img3.imonet.ro/XBSG/BSG00KJNOP4/garsoniera-de-inchiriat-cluj-napoca-ultracentral-152982152.jpg", "https://img3.imonet.ro/XBSG/BSG00KJNOP4/garsoniera-de-inchiriat-cluj-napoca-ultracentral-152982136.jpg", "https://img3.imonet.ro/XBSG/BSG00KJNOP4/garsoniera-de-inchiriat-cluj-napoca-ultracentral-152982138.jpg", "https://img3.imonet.ro/XBSG/BSG00KJNOP4/garsoniera-de-inchiriat-cluj-napoca-ultracentral-152982142.jpg", "https://img3.imonet.ro/XBSG/BSG00KJNOP4/garsoniera-de-inchiriat-cluj-napoca-ultracentral-152982166.jpg", "https://img3.imonet.ro/XBSG/BSG00KJNOP4/garsoniera-de-inchiriat-cluj-napoca-ultracentral-152982162.jpg", "https://img3.imonet.ro/XBSG/BSG00KJNOP4/garsoniera-de-inchiriat-cluj-napoca-ultracentral-152982158.jpg", "https://img3.imonet.ro/XBSG/BSG00KJNOP4/garsoniera-de-inchiriat-cluj-napoca-ultracentral-152982164.jpg", "https://img3.imonet.ro/XBSG/BSG00KJNOP4/garsoniera-de-inchiriat-cluj-napoca-ultracentral-152982140.jpg", "https://img3.imonet.ro/XBSG/BSG00KJNOP4/garsoniera-de-inchiriat-cluj-napoca-ultracentral-152982144.jpg", "https://img3.imonet.ro/XBSG/BSG00KJNOP4/garsoniera-de-inchiriat-cluj-napoca-ultracentral-152982146.jpg", "https://img3.imonet.ro/XBSG/BSG00KJNOP4/garsoniera-de-inchiriat-cluj-napoca-ultracentral-152982150.jpg"] }
 
@@ -58,7 +53,7 @@ function SwipeHome() {
   return (
     <>
       {rentItems && rentItems[index] &&
-        <ItemCard key={index} item={rentItems[index]} triggerNext={triggerNext}/>}
+        <ItemCard key={index} item={rentItems[index]} triggerNext={triggerNext} />}
     </>
   )
 }

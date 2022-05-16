@@ -24,7 +24,7 @@ export default function MapComponent(props) {
         }
         setLockedRegion({ ...region })
 
-    }
+    } 
 
     const handleSave = () => {
         props.setPoints([...props.points, { ...lockedRegion, radius }]);

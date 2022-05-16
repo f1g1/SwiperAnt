@@ -19,6 +19,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { ScrollView } from 'react-native-gesture-handler';
 import MapViewComponent from '../Generic/MapViewComponent';
+import { PostUserRentItem } from '../../services/UserRentItemService';
 
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -26,6 +27,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 export default ItemCard = ({ item, triggerNext }) => {
   const [liked, setLiked] = useState()
+  const [dateViewd, setDateViewd] = useState()
 
   useEffect(() => {
     if (liked == false || liked == true)
@@ -33,14 +35,25 @@ export default ItemCard = ({ item, triggerNext }) => {
   }, [liked])
 
   useEffect(() => {
-    console.log(item.location)
+    setDateViewd(Date.now())
   }, [item])
 
-
+ const getUserRentItem=()=>{
+   let userRentItem={
+    DateViewd:dateViewd,
+    DateInteraction:Date.now(),
+    RentItemId:item.id
+   }
+   return userRentItem;
+ }
   const likePressed = () => {
+    let userRentItem=getUserRentItem()
+    PostUserRentItem({...userRentItem,Liked:true});
     setLiked(true);
   }
   const dislikePressed = () => {
+    let userRentItem=getUserRentItem()
+    PostUserRentItem({...userRentItem,Liked:false});
     setLiked(false);
   }
 

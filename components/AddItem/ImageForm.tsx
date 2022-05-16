@@ -5,6 +5,10 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { Button } from "react-native-paper";
 
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
+
 const Separator = () => (
   <View style={styles.separator} />
 );
@@ -51,8 +55,8 @@ export default function ImageForm({ images, setImages, setOpen }) {
 
   return (
     <>
-      <Text style={styles.title}>Gallery</Text>
-      <Separator />
+      {/* <Text style={styles.title}>Gallery</Text>
+      <Separator /> */}
 
       <View style={styles.imageContainer}>
         <DraggableFlatList
@@ -70,7 +74,7 @@ export default function ImageForm({ images, setImages, setOpen }) {
         <Button onPress={openLibrary} mode="contained">Phone Gallery</Button>
       </View>
 
-      <View style={styles.backButton}>
+      <View style={styles.galleryButton}>
         <Button onPress={() => setOpen(false)} mode="contained" color="red" >Back</Button>
       </View>
     </>
@@ -78,9 +82,6 @@ export default function ImageForm({ images, setImages, setOpen }) {
 }
 
 const styles = StyleSheet.create({
-  backButton: {
-    marginTop: 20
-  },
   rowItem: {
     flex: 1,
     flexDirection: "row",
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     margin: 5
   },
   imageContainer: {
-    height: 500
+    height: screenHeight*0.53
   },
 
   errorText: {
