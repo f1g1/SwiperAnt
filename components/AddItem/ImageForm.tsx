@@ -4,6 +4,7 @@ import DraggableFlatList, { RenderItemParams, ScaleDecorator } from "react-nativ
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { Button } from "react-native-paper";
+import { BASE_URL } from "../../services/conts";
 
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -12,7 +13,12 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const Separator = () => (
   <View style={styles.separator} />
 );
+
+
 export default function ImageForm({ images, setImages, setOpen }) {
+
+
+
   const renderItem = ({ item, drag, isActive }: RenderItemParams<any>) => {
     return (
       <ScaleDecorator>
@@ -24,7 +30,7 @@ export default function ImageForm({ images, setImages, setOpen }) {
             <Text style={styles.title}>Photo #{images?.indexOf(item) + 1}</Text>
             <Image
               style={styles.tinyLogo}
-              source={{ uri: item?.uri }}
+              source={{ uri: item?.uri ? item?.uri : BASE_URL + item?.path }}
             />
             <Button color={"red"} onPress={() => deleteImage(item)} mode="contained" > Delete!</Button>
           </View>
@@ -87,7 +93,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
-    textBreakStrategy: 'simple'
   },
   rowButt: {
     fontSize: 20
@@ -106,7 +111,7 @@ const styles = StyleSheet.create({
     margin: 5
   },
   imageContainer: {
-    height: screenHeight*0.53
+    height: screenHeight * 0.53
   },
 
   errorText: {

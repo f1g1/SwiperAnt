@@ -1,8 +1,6 @@
 const baseUrl = 'http://10.0.2.2:5055/api/RentItem';
 
 export function PostRentItem(rentItem) {
-
-    console.log("postRentItemmm", rentItem.Location)
     var axios = require('axios');
     var config = {
         method: 'post',
@@ -18,6 +16,21 @@ export function PostRentItem(rentItem) {
         .catch(function (error) {
             console.log(JSON.stringify(error));
         });
+}
+
+
+export function PutRentItem(rentItem) {
+    var axios = require('axios');
+    var config = {
+        method: 'put',
+        url: baseUrl,
+        data: rentItem,
+        headers: {}
+    };
+
+    const promise = axios(config);
+    const dataPromise = promise.then((response) => response.data)
+    return dataPromise
 }
 
 

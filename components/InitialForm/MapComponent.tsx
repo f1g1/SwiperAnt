@@ -13,18 +13,16 @@ export default function MapComponent(props) {
     const [lockedRegion, setLockedRegion] = useState()
 
     const handleLock = () => {
-
         if (props.single) {
-            console.log("radius props single",radius)
-            props.setPoints([{ ...region, radius:radius }])
+            props.setPoints({ ...region, radius })
             setLockedRegion(null);
-            setTimeout(() => { props.setOpenMap?.(false);   }, 200);
+            setTimeout(() => { props.setOpenMap?.(false); }, 200);
             return;
-           
-        }
-        setLockedRegion({ ...region })
 
-    } 
+        }
+        setLockedRegion({ ...region, radius: radius })
+
+    }
 
     const handleSave = () => {
         props.setPoints([...props.points, { ...lockedRegion, radius }]);
@@ -64,10 +62,10 @@ export default function MapComponent(props) {
                                 fillColor={'rgba(230,238,255,0.5)'}
                             />
                         }
-                        {props.points && props.points.map((point, i) => (
+                        {props.points &&  props.points.map((point, i) => (
                             <Circle
                                 key={"circle" + i}
-                                radius={point.radius}
+                                radius={point.radius || radius}
                                 center={point}
                                 strokeWidth={1}
                                 strokeColor={'#1a66ff'}
@@ -114,8 +112,6 @@ export default function MapComponent(props) {
                     <Button color={"red"} title="Cancel" onPress={handleCancel} />
                 </View>
             </View>}
-
-
         </>
     )
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, Button, Alert, StyleSheet, Dimensions } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { TextInput } from "react-native-paper";
@@ -6,7 +6,7 @@ import DropDown from "react-native-paper-dropdown";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { PostRentItem } from "../../services/RentItemService";
+import { PostRentItem, PutRentItem } from "../../services/RentItemService";
 import ImageForm from "./ImageForm";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MapComponent from "../InitialForm/MapComponent";
@@ -28,35 +28,51 @@ const CurrencyList = [
 ];
 
 const schema = yup.object({
-    Images: yup.array().min(3).required('At least 3 images are required'),
-    Location: yup.array().required(),
-    Title: yup.string().required()
+    images: yup.array().min(3).required('At least 3 images are required'),
+    location: yup.object().required(),
+    title: yup.string().required()
         .test('len', 'Must be less than 100 characters', val => val?.length <= 100),
-    Description: yup.string()
+    description: yup.string()
         .test('len', 'Must be less than 500 characters', val => val?.length <= 500),
-    Price: yup.number().positive().integer().required('Price is required'),
-    Currency: yup.string().required(),
-    Surface: yup.number().positive("Surface needs ").required("Surface needs "),
-    Rooms: yup.number().positive().integer().required(),
-    Type: yup.string().required(),
-    Level: yup.string().required(),
-    City: yup.string().required(),
-    Neighborhood: yup.string().required(),
+    price: yup.number().positive().integer().required('Price is required'),
+    currency: yup.string().required(),
+    surface: yup.number().positive("Surface needs ").required("Surface needs "),
+    rooms: yup.number().positive().integer().required(),
+    type: yup.string().required(),
+    level: yup.string().required(),
+    city: yup.string().required(),
+    neighborhood: yup.string().required(),
 });
 
-export default function AddItemForm() {
+export default function AddItemForm({ givenItem, setGivenItem }) {
     const [showDropDown, setShowDropDown] = useState(false);
     const [imagesCount, setImagesCount] = useState(0)
     const [points, setPoints] = useState([])
     const [openGallery, setOpenGallery] = useState(false)
     const [openMap, setOpenMap] = useState(false)
-    const { control, handleSubmit, formState: { errors }, setValue } = useForm({
+    const { control, handleSubmit, formState: { errors }, setValue, reset } = useForm({
         resolver: yupResolver(schema)
     });
     const onSubmit = (data) => {
-        PostRentItem({ ...data, Location: data.Location[0] })
+        console.log("@submitCalled", data)
+        if (givenItem) {
+            PutRentItem({ ...data }).then(() =>
+                setGivenItem()
+            );
+        }
+        else
+            PostRentItem({ ...data })
 
     };
+
+    useEffect(() => {
+        if (givenItem) {
+            reset(givenItem)
+            setImagesCount(givenItem.images.length)
+
+        }
+    }, [givenItem])
+
 
     const HandleImageChange = (onChange, images) => {
         onChange(images)
@@ -64,16 +80,15 @@ export default function AddItemForm() {
     }
     return (
         <SafeAreaView style={styles.container}>
-
             {openMap &&
                 <Controller
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
                         <View style={styles.containerMap}>
-                            <MapComponent setPoints={onChange} points={value || []} single setOpenMap={setOpenMap} />
+                            <MapComponent setPoints={onChange} points={value ? [value] : []} single setOpenMap={setOpenMap} />
                         </View>
                     )}
-                    name="Location"
+                    name="location"
                 />}
 
             {openGallery &&
@@ -82,7 +97,7 @@ export default function AddItemForm() {
                     render={({ field: { onChange, onBlur, value } }) => (
                         <ImageForm images={value || []} setImages={x => HandleImageChange(onChange, x)} setOpen={setOpenGallery} />
                     )}
-                    name="Images"
+                    name="images"
                 />}
             {openGallery || openMap ||
                 <KeyboardAwareScrollView >
@@ -107,7 +122,7 @@ export default function AddItemForm() {
                                 label={"Title"}
                             />
                         )}
-                        name="Title"
+                        name="title"
                     />
                     <Text style={styles.errorText}>{errors.Title?.message}</Text>
 
@@ -126,7 +141,7 @@ export default function AddItemForm() {
                                 label={"Description"}
                             />
                         )}
-                        name="Description"
+                        name="description"
                     />
                     <Text style={styles.errorText}>{errors.Description?.message}</Text>
                     <Controller
@@ -140,11 +155,11 @@ export default function AddItemForm() {
                                 keyboardType='number-pad'
                                 onBlur={onBlur}
                                 onChangeText={onChange}
-                                value={value}
+                                value={value?.toString()}
                                 label={"Price"}
                             />
                         )}
-                        name="Price"
+                        name="price"
                     />
                     <Text style={styles.errorText}>{errors.Price?.message}</Text>
                     <Controller
@@ -160,10 +175,10 @@ export default function AddItemForm() {
                                 onDismiss={() => setShowDropDown(false)}
                                 value={value}
                                 list={CurrencyList}
-                                setValue={(v) => setValue("Currency", v)}
+                                setValue={(v) => setValue("currency", v)}
                             />
                         )}
-                        name="Currency"
+                        name="currency"
                     />
                     <Text style={styles.errorText}>{errors.Currency?.message}</Text>
 
@@ -178,11 +193,11 @@ export default function AddItemForm() {
                                 keyboardType='number-pad'
                                 onBlur={onBlur}
                                 onChangeText={onChange}
-                                value={value}
+                                value={value?.toString()}
                                 label={"Surface (MP)"}
                             />
                         )}
-                        name="Surface"
+                        name="surface"
                     />
                     <Text style={styles.errorText}>{errors.Surface && "Surface must be a positive number"}</Text>
 
@@ -196,11 +211,11 @@ export default function AddItemForm() {
                                 keyboardType='number-pad'
                                 onBlur={onBlur}
                                 onChangeText={onChange}
-                                value={value}
+                                value={value?.toString()}
                                 label={"Rooms Number"}
                             />
                         )}
-                        name="Rooms"
+                        name="rooms"
                     />
                     <Text style={styles.errorText}>{errors.Rooms && "Rooms number must be a positive number"}</Text>
 
@@ -219,7 +234,7 @@ export default function AddItemForm() {
                                 label={"Type"}
                             />
                         )}
-                        name="Type"
+                        name="type"
                     />
                     <Text style={styles.errorText}>{errors.Type?.message}</Text>
 
@@ -238,7 +253,7 @@ export default function AddItemForm() {
                                 label={"Level"}
                             />
                         )}
-                        name="Level"
+                        name="level"
                     />
                     <Text style={styles.errorText}>{errors.Level?.message}</Text>
 
@@ -257,7 +272,7 @@ export default function AddItemForm() {
                                 label={"City"}
                             />
                         )}
-                        name="City"
+                        name="city"
                     />
                     <Text style={styles.errorText}>{errors.City?.message}</Text>
 
@@ -278,11 +293,16 @@ export default function AddItemForm() {
 
                             />
                         )}
-                        name="Neighborhood"
+                        name="neighborhood"
                     />
 
                     <Text style={styles.errorText}>{errors.Neighborhood?.message}</Text>
-                    <Button title="Submit" onPress={handleSubmit(onSubmit)} />
+
+                    <Button title={givenItem ? "Save Edit" : "Submit"} onPress={handleSubmit(onSubmit)} />
+
+                    {givenItem && <View style={styles.buttonGiven}>
+                        <Button title={"Cancel"} color="red" onPress={() => setGivenItem()} />
+                    </View>}
                 </KeyboardAwareScrollView >
             }
 
@@ -313,4 +333,7 @@ const styles = StyleSheet.create({
         minHeight: "100%",
         backgroundColor: "grey"
     },
+    buttonGiven: {
+        marginTop: 10
+    }
 })
