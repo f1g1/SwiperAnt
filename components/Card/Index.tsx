@@ -25,7 +25,7 @@ import { PostUserRentItem } from '../../services/UserRentItemService';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 
-export default ItemCard = ({ item, triggerNext }) => {
+export default ItemCard = ({ item, triggerNext, showBottomBar: showBottomContainer,goBack }) => {
   const [liked, setLiked] = useState()
   const [dateViewd, setDateViewd] = useState()
 
@@ -38,22 +38,22 @@ export default ItemCard = ({ item, triggerNext }) => {
     setDateViewd(Date.now())
   }, [item])
 
- const getUserRentItem=()=>{
-   let userRentItem={
-    DateViewd:dateViewd,
-    DateInteraction:Date.now(),
-    RentItemId:item.id
-   }
-   return userRentItem;
- }
+  const getUserRentItem = () => {
+    let userRentItem = {
+      DateViewd: dateViewd,
+      DateInteraction: Date.now(),
+      RentItemId: item.id
+    }
+    return userRentItem;
+  }
   const likePressed = () => {
-    let userRentItem=getUserRentItem()
-    PostUserRentItem({...userRentItem,Liked:true});
+    let userRentItem = getUserRentItem()
+    PostUserRentItem({ ...userRentItem, Liked: true });
     setLiked(true);
   }
   const dislikePressed = () => {
-    let userRentItem=getUserRentItem()
-    PostUserRentItem({...userRentItem,Liked:false});
+    let userRentItem = getUserRentItem()
+    PostUserRentItem({ ...userRentItem, Liked: false });
     setLiked(false);
   }
 
@@ -74,21 +74,38 @@ export default ItemCard = ({ item, triggerNext }) => {
 
         </ScrollView>
       </View>
+      {showBottomContainer ? (
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            onPress={dislikePressed}
+            style={[styles.roundButton, styles.roundButtonPass]}>
+            <Text style={{ color: "black" }}>Pass</Text>
+          </TouchableOpacity>
 
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          onPress={dislikePressed}
-          style={[styles.roundButton, styles.roundButtonPass]}>
-          <Text style={{ color: "black" }}>Pass</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={likePressed}
+            style={[styles.roundButton, styles.roundButtonLike]}>
+            <Text style={{ color: "black" }}>Like</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (<>
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            onPress={dislikePressed}
+            >
+            <Text style={{ color: "black" }}>Chat</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={likePressed}
-          style={[styles.roundButton, styles.roundButtonLike]}>
-          <Text style={{ color: "black" }}>Like</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            onPress={goBack}
+          >
+            <Text style={{ color: "black" }}>Back</Text>
+          </TouchableOpacity>
+        </View>
+      </>)
 
+
+      }
     </Animated.View >
   )
 }

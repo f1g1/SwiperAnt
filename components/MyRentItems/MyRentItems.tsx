@@ -4,10 +4,11 @@ import * as React from 'react';
 import { View, useWindowDimensions } from 'react-native';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import CreatedRentItems from './CreatedRentItems';
+import LikedRentItems from './LikedRentItems';
 
 const FirstRoute = () => (
-    <View style={{ flex: 1, backgroundColor: '#673ab7' }} />
-    );
+  <LikedRentItems/>
+  );
 
 const SecondRoute = () => (
     <CreatedRentItems/>

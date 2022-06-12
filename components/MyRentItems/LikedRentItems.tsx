@@ -1,3 +1,4 @@
+import { loadConfig } from 'browserslist';
 import React, { useEffect, useState } from 'react'
 import { Dimensions, FlatList, Image, StyleSheet, View } from 'react-native';
 import DraggableFlatList, { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist'
@@ -5,7 +6,10 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Button, Text } from 'react-native-paper'
 import { BASE_URL } from '../../services/conts';
 import { DeleteMyRentItem, GetMyRentItems } from '../../services/RentItemService';
+import { RemoveUserRentItem, GetLikedUserRentItems } from '../../services/UserRentItemService';
 import AddItemForm from '../AddItem/AddItemForm';
+import OneCircleMapComponent from '../Generic/OneCircleMapComponent';
+import ItemCard from '../Card/Index';
 
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -13,62 +17,86 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 export default function LikedRentItems() {
     const [myLikedRentItems, setmyLikedRentItems] = useState([])
-    const [editItem, setEditItem] = useState()
+    const [highlightedItem, setHighlightedItem] = useState()
     useEffect(() => {
-        GetMyRentItems().then(data => setmyLikedRentItems(data));
-    }, [editItem])
+        GetLikedUserRentItems(null, null).then((data) => {
+            setmyLikedRentItems(data)
+        });
+    }, [])
 
+    useEffect(() => {
+        console.log("LIKED RENT ITEMS COUNT: ", myLikedRentItems.length)
+    }, [myLikedRentItems])
 
     const deleteItem = (item) => {
         var filteredArray = myLikedRentItems.filter(e => e.id !== item.id)
         console.log(item.id)
-        DeleteMyRentItem(item.id).then(() => {
+        RemoveUserRentItem(item.id).then(() => {
             setmyLikedRentItems(filteredArray)
         })
     }
 
-    const editPushed=(item)=>{
-        setEditItem(item);
-    }
+    // const editPushed=(item)=>{
+    //     setEditItem(item);
+    // }
 
-    const renderItem = ({ item }) => {
+    const renderItem = ({ item, index }) => {
+        let rentItem = item.rentItem
+
+        console.log("Item", item)
         return (
-            <TouchableOpacity
-                onPressOut={() => isActive = false}
-            >
-                <View style={styles.rowItem}>
-                    <Text style={styles.title}>{item.title}</Text>
+
+            <View style={styles.rowItem}>
+                <View style={styles.mapStuff}>
+                    <OneCircleMapComponent location={rentItem.location} />
+                </View>
+                {/* <Text style={styles.title}>{item.title}</Text> */}
+                <TouchableOpacity
+                    onPressOut={() => setHighlightedItem(rentItem)}
+                >
                     <Image
                         style={styles.tinyLogo}
-                        source={{ uri: BASE_URL + item.images[0]?.path }}
+                        source={{ uri: BASE_URL + rentItem.images[0]?.path }}
+
                     />
-                    <View style={styles.buttonContainer}>
-                        <Button onPress={() => editPushed(item)} mode="contained" > Edit</Button>
-                        <Button color={"red"} onPress={() => deleteItem(item)} mode="contained" > Delete</Button>
-                    </View>
+                </TouchableOpacity>
+                <View style={styles.buttonContainer}>
+                    {/* <Button onPress={() => editPushed(item)} mode="contained" > Chat</Button> */}
+                    <Button color={"red"} onPress={() => deleteItem(item)} mode="contained" > Remove</Button>
                 </View>
-            </TouchableOpacity>
+            </View>
         );
     };
 
-
     return (
         <>
-            {editItem ? (<AddItemForm givenItem={editItem} setGivenItem={setEditItem}></AddItemForm>) : (
-                <View style={styles.imageContainer}>
-                    <FlatList
-                        data={myLikedRentItems}
-                        keyExtractor={(item) => item.id}
-                        renderItem={renderItem}
-                    />
-                </View >
-            )}
+
+            {highlightedItem ?
+                <ItemCard item={highlightedItem} goBack={() => setHighlightedItem()} />
+                :
+                myLikedRentItems.length > 0 && (
+                    <View style={styles.imageContainer}>
+                        <FlatList
+                            data={myLikedRentItems}
+                            keyExtractor={(item) => item.id}
+                            renderItem={renderItem}
+                        />
+                    </View >
+                )
+            }
+
+
         </>
 
     )
 }
 
 const styles = StyleSheet.create({
+    mapStuff: {
+        width: 100,
+        height: 100, zIndex: 99999,
+        backgroundColor: "red"
+    },
     rowItem: {
         flex: 1,
         flexDirection: "row",
@@ -88,8 +116,8 @@ const styles = StyleSheet.create({
         marginHorizontal: 8
     },
     tinyLogo: {
-        width: 120,
-        height: 120,
+        width: 100,
+        height: 100,
         margin: 5
     },
     imageContainer: {

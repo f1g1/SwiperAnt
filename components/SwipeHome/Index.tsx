@@ -53,7 +53,7 @@ function SwipeHome() {
   return (
     <>
       {rentItems && rentItems[index] &&
-        <ItemCard key={index} item={rentItems[index]} triggerNext={triggerNext} />}
+        <ItemCard key={index} item={rentItems[index]} triggerNext={triggerNext} showBottomBar={true} />}
     </>
   )
 }
