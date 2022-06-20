@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Dimensions, FlatList, Image, StyleSheet, View } from 'react-native';
-import DraggableFlatList, { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Button, Text } from 'react-native-paper'
-import { BASE_URL } from '../../services/conts';
+import { BASE_URL } from '../../services/const';
 import { DeleteMyRentItem, GetMyRentItems } from '../../services/RentItemService';
 import AddItemForm from '../AddItem/AddItemForm';
 

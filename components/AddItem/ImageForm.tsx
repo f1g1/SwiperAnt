@@ -4,8 +4,7 @@ import DraggableFlatList, { RenderItemParams, ScaleDecorator } from "react-nativ
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { Button } from "react-native-paper";
-import { BASE_URL } from "../../services/conts";
-
+import { BASE_URL } from "../../services/const";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 

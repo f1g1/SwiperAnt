@@ -1,4 +1,6 @@
-const baseUrl = 'http://10.0.2.2:5055/api/InitialForm';
+import { BASE_URL } from './const';
+
+const baseUrl = BASE_URL+'api/InitialForm';
 
 export function PostInitialForm(initialForm) {
     var axios = require('axios');

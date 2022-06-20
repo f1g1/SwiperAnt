@@ -1,4 +1,6 @@
-const baseUrl = 'http://10.0.2.2:5055/api/Users';
+import { BASE_URL } from './const';
+
+const baseUrl = BASE_URL+'api/Users';
 
 const config = (token) => {
     return { Authorization: `Bearer ${token}` }

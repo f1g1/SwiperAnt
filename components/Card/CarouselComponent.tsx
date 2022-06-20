@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
+import { BASE_URL } from '../../services/const';
 
 const ENTRIES1 = [
   {
@@ -32,7 +33,6 @@ const ENTRIES1 = [
   },
 ];
 
-const baseUrl = 'http://10.0.2.2:5055/';
 
 const { width: screenWidth ,height:screenHeight} = Dimensions.get('window');
 
@@ -54,7 +54,7 @@ export const MyCarousel = ({ images }) => {
           style={{
             height: screenHeight-screenHeight*0.65,
           }}
-          source={{ uri: baseUrl + item.path }}
+          source={{ uri: BASE_URL + item.path }}
         />
 
       </View>
