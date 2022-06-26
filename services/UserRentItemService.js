@@ -28,6 +28,23 @@ export function PostUserRentItem(userRentItem) {
 }
 
 
+export function GetRentItemsByRentItem(rentItemId,take, skip) {
+    var axios = require('axios');
+    var config = {
+        method: 'get',
+        url: baseUrl + "/byRentItem",
+        data: {},
+        headers: {},
+        params: {rentItemId, take, skip }
+
+    };
+    const promise = axios(config);
+    const dataPromise = promise.then((response) => response.data)
+    return dataPromise
+
+}
+
+
 //todo add GetMyUSerREntITem
 export function GetLikedUserRentItems(take, skip) {
     var axios = require('axios');

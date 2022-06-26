@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Dimensions, FlatList, Image, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Button, Text } from 'react-native-paper'
-import { RemoveUserRentItem, GetLikedUserRentItems } from '../../services/UserRentItemService';
+import { RemoveUserRentItem, GetLikedUserRentItems, GetRentItemsByRentItem } from '../../services/UserRentItemService';
 import OneCircleMapComponent from '../Generic/OneCircleMapComponent';
 import ItemCard from '../Card/Index';
 import ChatComponent from '../Chat/ChatComponent';
@@ -13,31 +13,25 @@ import moment from 'moment';
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 
-export default function LikedRentItems() {
-    const [myLikedRentItems, setmyLikedRentItems] = useState([])
-    const [highlightedItem, setHighlightedItem] = useState()
+export default function ChatsRentItems({userRentItem}) {
+    const [chatRentItems, setChatRentItems] = useState([])
     const [openChatItem, setOpenChatItem] = useState()
     useEffect(() => {
-        GetLikedUserRentItems(null, null).then((data) => {
-            setmyLikedRentItems(data)
+        GetRentItemsByRentItem(userRentItem.id,null, null).then((data) => {
+            setChatRentItems(data)
         });
     }, [])
 
     const deleteItem = (item) => {
-        var filteredArray = myLikedRentItems.filter(e => e.id !== item.id)
+        var filteredArray = chatRentItems.filter(e => e.id !== item.id)
         console.log(item.id)
         RemoveUserRentItem(item.id).then(() => {
-            setmyLikedRentItems(filteredArray)
+            setChatRentItems(filteredArray)
         })
     }
     const openChat = (item) => {
         setOpenChatItem(item);
     }
-
-    // useEffect(() => {
-    //     console.log("Liked Rent Items open chat: ", openChatItem)
-    // }, [openChatItem])
-
 
     const renderItem = ({ item, index }) => {
         let rentItem = item.rentItem
@@ -71,16 +65,16 @@ export default function LikedRentItems() {
         <>
             {openChatItem ?
                 <>
-                    <ChatComponent userRentItem={openChatItem} imOwner={false} />
+                    <ChatComponent userRentItem={openChatItem} />
                 </>
                 :
                 highlightedItem ?
                     <ItemCard item={highlightedItem} goBack={() => setHighlightedItem()} />
                     :
-                    myLikedRentItems.length > 0 && (
+                    chatRentItems.length > 0 && (
                         <View style={styles.imageContainer}>
                             <FlatList
-                                data={myLikedRentItems}
+                                data={chatRentItems}
                                 keyExtractor={(item) => item.id}
                                 renderItem={renderItem}
                             />
@@ -104,7 +98,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-evenly",
     },
-  
     tinyLogo: {
         width: 100,
         height: 100,
@@ -113,7 +106,9 @@ const styles = StyleSheet.create({
     imageContainer: {
         height: screenHeight * 0.8
     },
-
+    errorText: {
+        color: "red"
+    },
     buttonContainer: {
         margin: 10,
         flex: 1,

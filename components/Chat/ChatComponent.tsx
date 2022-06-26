@@ -4,7 +4,7 @@ import { Button, Text, TextInput } from 'react-native-paper'
 import { GetConversation, PostMessage } from '../../services/MessageService'
 import MessageComponent from './MessageComponent'
 
-export default function ChatComponent({ userRentItem, imOwner }) {
+export default function ChatComponent({ userRentItem, imOwner, triggerBack }) {
   const [text, setText] = useState("")
   const [messages, setMessages] = useState([])
 
@@ -12,19 +12,13 @@ export default function ChatComponent({ userRentItem, imOwner }) {
     getConversation(userRentItem.rentItem.userId, userRentItem.userId, userRentItem.rentItem.id);
   }, [])
 
-  useEffect(() => {
-
-    console.log("messages:", messages)
-  }, [messages])
-
-
   const getConversation = (ownerId, renterId, rentItemId) => {
     GetConversation(ownerId, renterId, rentItemId).then(newMessages => setMessages(messages.concat(newMessages)))
   }
 
   const sendMessage = () => {
     if (text != "")
-      PostMessage(userRentItem, text, null).then((message) => {
+      PostMessage(userRentItem, text, null, imOwner).then((message) => {
         console.log("Send message messages: ", message)
         setMessages([...messages, message])
         setText("");
@@ -33,13 +27,15 @@ export default function ChatComponent({ userRentItem, imOwner }) {
   }
 
   return (<>
-    <Text>{userRentItem.rentItem.title}</Text>
+    <View style={styles.header}>
+      <Text>{userRentItem.rentItem.title}</Text>
+      <Button onPress={triggerBack} mode="contained">Back</Button>
+    </View>
     <View style={styles.messagesContainer}>
 
       <ScrollView>
-
-        {messages && messages?.length > 0 && messages.map(message => (
-          <MessageComponent key={message.DateCreated + message.DateServer} afterDifferent={false} text={message.text} isMyMessage={message.IsFromOwner == imOwner} ></MessageComponent>
+        {messages && messages?.length > 0 && messages.map((message, i) => (
+          <MessageComponent key={i} afterDifferent={false} text={message.text} isMyMessage={message.isFromOwner === imOwner} ></MessageComponent>
         ))}
 
       </ScrollView>
@@ -60,6 +56,13 @@ export default function ChatComponent({ userRentItem, imOwner }) {
   )
 }
 const styles = StyleSheet.create({
+  header: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "grey"
+  },
   messagesContainer: {
     flex: 1
   },
