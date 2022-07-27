@@ -3,7 +3,6 @@ import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 
 export default function MessageComponent({ text, afterDifferent, isMyMessage }) {
-  { console.log("IS MY MESSAGE?", isMyMessage) }
   return (
     <View style={[styles.messageContainer, afterDifferent ? styles.afterDifferent : styles.afterSame]}>
       <View style={[styles.message, isMyMessage ? styles.myMessage : styles.otherMessage]}>

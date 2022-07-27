@@ -14,8 +14,9 @@ export default function MapViewComponent({ items }) {
             }}
         >
 
-            {items && items?.length > 0 && items.map(item => (
+            {items && items?.length > 0 && items.map((item, i) => (
                 <Circle
+                    key={"circle" + i}
                     radius={item.location.radius}
                     center={{
                         latitude: item.location.latitude,
