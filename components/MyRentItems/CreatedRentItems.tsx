@@ -25,7 +25,6 @@ export default function CreatedRentItems() {
 
     const deleteItem = (item) => {
         var filteredArray = myRentItems.filter(e => e.id !== item.id)
-        console.log(item.id)
         DeleteMyRentItem(item.id).then(() => {
             setmyRentItems(filteredArray)
         })

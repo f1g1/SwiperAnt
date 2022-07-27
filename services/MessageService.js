@@ -7,7 +7,7 @@ export function GetConversation(userOwnerId, userRenterId, rentItemId, take = 20
     var config = {
         method: 'get',
         url: baseUrl + "/GetConversation",
-        params: { userOwnerId, userRenterId, rentItemId }
+        params: { userOwnerId, userRenterId, rentItemId,take,skip }
     };
 
     const promise = axios(config);
@@ -39,10 +39,7 @@ export function PostMessage(userRentItem, text, media, isFromOwner) {
     const promise = axios(config);
     const dataPromise = promise.then(() => messageUi)
     return dataPromise
-
-
 }
-
 
 //todo add GetMyUSerREntITem
 export function GetLikedUserRentItems(take, skip) {
@@ -58,7 +55,6 @@ export function GetLikedUserRentItems(take, skip) {
     const promise = axios(config);
     const dataPromise = promise.then((response) => response.data)
     return dataPromise
-
 }
 
 export function RemoveUserRentItem(id) {

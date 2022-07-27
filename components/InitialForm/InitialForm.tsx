@@ -27,7 +27,6 @@ export default function InitialForm() {
             ...data,
            locations:JSON.stringify(points)
           }
-          console.log(output);
           PostInitialForm(output);
     }
 

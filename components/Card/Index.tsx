@@ -5,16 +5,12 @@ import {
   Dimensions,
   StyleSheet,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 import ImagesCarousel from './CarouselComponent';
 import ItemInfoContainer from './ItemInfoContainer';
 import Animated, {
   Layout,
-  SlideOutRight,
   SlideInDown,
-  SlideOutLeft,
-  useSharedValue,
   SlideOutUp
 } from 'react-native-reanimated';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -23,7 +19,6 @@ import { PostUserRentItem } from '../../services/UserRentItemService';
 
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-
 
 export default ItemCard = ({ item, triggerNext, showBottomBar: showBottomContainer,goBack }) => {
   const [liked, setLiked] = useState()
@@ -63,7 +58,6 @@ export default ItemCard = ({ item, triggerNext, showBottomBar: showBottomContain
       exiting={SlideOutUp}
       layout={Layout.springify()}
     >
-
       <View style={styles.bigContainer}>
         <ImagesCarousel images={item.images} />
         <ScrollView style={[liked == true ? styles.green : liked == false ? styles.red : {}]}>

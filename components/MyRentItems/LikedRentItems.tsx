@@ -25,7 +25,6 @@ export default function LikedRentItems() {
 
     const deleteItem = (item) => {
         var filteredArray = myLikedRentItems.filter(e => e.id !== item.id)
-        console.log(item.id)
         RemoveUserRentItem(item.id).then(() => {
             setmyLikedRentItems(filteredArray)
         })
@@ -33,11 +32,6 @@ export default function LikedRentItems() {
     const openChat = (item) => {
         setOpenChatItem(item);
     }
-
-    // useEffect(() => {
-    //     console.log("Liked Rent Items open chat: ", openChatItem)
-    // }, [openChatItem])
-
 
     const renderItem = ({ item, index }) => {
         let rentItem = item.rentItem
@@ -71,7 +65,7 @@ export default function LikedRentItems() {
         <>
             {openChatItem ?
                 <>
-                    <ChatComponent userRentItem={openChatItem} imOwner={false} />
+                    <ChatComponent userRentItem={openChatItem} imOwner={false} triggerBack={()=>{setOpenChatItem()}} />
                 </>
                 :
                 highlightedItem ?

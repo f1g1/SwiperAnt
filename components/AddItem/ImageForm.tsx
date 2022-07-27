@@ -33,7 +33,7 @@ export default function ImageForm({ images, setImages, setOpen }) {
             />
             <Button color={"red"} onPress={() => deleteImage(item)} mode="contained" > Delete!</Button>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> 
       </ScaleDecorator >
     );
   };
@@ -47,22 +47,17 @@ export default function ImageForm({ images, setImages, setOpen }) {
   const startCamera = async () => {
     const result = await launchCamera({ mediaType: "photo", quality: 1, cameraType: "back", includeBase64: true });
     if (!result.didCancel && !result.errorCode)
-      console.log("succes image camera")
     setImages(images.concat(result.assets));
   }
 
   const openLibrary = async () => {
     const result = await launchImageLibrary({ mediaType: "photo", quality: 1, selectionLimit: 0, includeBase64: true });
     if (!result.didCancel && !result.errorCode)
-      console.log("succes image library")
     setImages(images.concat(result.assets));
   }
 
   return (
     <>
-      {/* <Text style={styles.title}>Gallery</Text>
-      <Separator /> */}
-
       <View style={styles.imageContainer}>
         <DraggableFlatList
           data={images}

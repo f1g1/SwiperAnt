@@ -1,18 +1,42 @@
-import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import React, { useState } from 'react'
+import { Image, StyleSheet, View } from 'react-native'
+import { OpacityDecorator } from 'react-native-draggable-flatlist'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Text } from 'react-native-paper'
+import { BASE_URL } from '../../services/const'
 
-export default function MessageComponent({ text, afterDifferent, isMyMessage }) {
+export default function MessageComponent({ text, media, afterDifferent, isMyMessage, setHighlightedImage, isLoadedAll }) {
   return (
-    <View style={[styles.messageContainer, afterDifferent ? styles.afterDifferent : styles.afterSame]}>
-      <View style={[styles.message, isMyMessage ? styles.myMessage : styles.otherMessage]}>
-        <Text style={styles.textStyle}>{text}</Text>
+    isLoadedAll ?
+      <View style={styles.noMoreMessage}>
 
+        <Text>No messages to load from here!</Text>
       </View>
-    </View>
+      :
+      <View style={[styles.messageContainer, afterDifferent ? styles.afterDifferent : styles.afterSame]}>
+
+        <View style={[styles.message, isMyMessage ? styles.myMessage : styles.otherMessage]}>
+          {text ?
+            <Text style={styles.textStyle}>{text}</Text>
+            :
+            <TouchableOpacity onLongPress={() => setHighlightedImage(media)} >
+              <Image
+                style={{ height: 100, width: 100 }}
+                source={{ uri: BASE_URL + media }}
+              />
+            </TouchableOpacity>
+          }
+        </View>
+      </View>
   )
 }
 const styles = StyleSheet.create({
+  noMoreMessage: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    opacity: 0.5,
+  },
   afterSame: {
     marginTop: 10
   },

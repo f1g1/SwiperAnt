@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { AuthContext } from '../../App';
-import { LayoutAnimation, StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { GetSignalrConnection } from '../../services/SignalRService';
 import ItemCard from '../Card/Index';
+import notifee, { AndroidGroupAlertBehavior } from '@notifee/react-native';
+import { Button } from 'react-native-paper';
 
 const axios = require('axios')
 
@@ -13,16 +15,52 @@ function SwipeHome() {
   const { state: authState } = React.useContext(AuthContext);
   const [rentItems, setRentItems] = useState()
   const [index, setIndex] = useState(0)
+  const [firstNotification, setFirstNotification] = useState(true)
+
+  async function onDisplayNotification(message) {
+    // Request permissions (required for iOS)
+    await notifee.requestPermission()
+
+    // Create a channel (required for Android)
+    const channelId = await notifee.createChannel({
+      id: 'default',
+      name: 'Default Channel',
+    });
+
+    // Display a notification
+  
+// This won't actually trigger a new group because the `id` field is the same.
+// We could however, update the text of the group summary
+await notifee.displayNotification({
+  id: "group", // important
+  title: "Group Chat",
+  android: {
+    channelId: "default",
+    groupSummary: true,
+    groupId: "123"
+  }
+});
+
+// This notification would be created from the FCM payload: 
+await notifee.displayNotification({
+  title: "Message 3",
+  android: {
+    channelId: "default",
+    groupId: "123"
+  }
+});
+  }
+
+
 
   useEffect(() => {
     if (authState.hasSignalr) {
       let connection = GetSignalrConnection()
-      console.log("has signalr, add ON Broadcast")
-      connection.on("BroadcastMessage", (user, message) => {
-        console.log(user, message);
-      })
-      connection.invoke("TestMethod", 'Test')
+      connection.on("ReceiveMessage", (message) => {
+        console.log("MESSAGE RECEIVED SIGNALR", message);
+        onDisplayNotification(message)
 
+      })
     }
   }, [authState])
 
@@ -46,7 +84,6 @@ function SwipeHome() {
   }, [])
 
   const triggerNext = () => {
-    console.log("triggered next")
     setIndex(index + 1)
   }
 

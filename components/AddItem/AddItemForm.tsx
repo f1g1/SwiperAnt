@@ -54,7 +54,6 @@ export default function AddItemForm({ givenItem, setGivenItem }) {
         resolver: yupResolver(schema)
     });
     const onSubmit = (data) => {
-        console.log("@submitCalled", data)
         if (givenItem) {
             PutRentItem({ ...data }).then(() =>
                 setGivenItem()

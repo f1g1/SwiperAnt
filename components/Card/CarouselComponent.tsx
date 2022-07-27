@@ -39,15 +39,12 @@ const { width: screenWidth ,height:screenHeight} = Dimensions.get('window');
 export const MyCarousel = ({ images }) => {
   const carouselRef = useRef();
   const goForward = () => {
-    console.log("HAHAHA FFF")
     carouselRef?.current?.snapToNext();
   };
   const goBackwards = () => {
-    console.log("HAHAHA bbb")
     carouselRef?.current?.snapToPrev();
   };
   const renderItem = ({ item, index }) => {
-    console.log("item", item)
     return (
       <View >
         <Image

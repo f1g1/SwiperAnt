@@ -24,7 +24,6 @@ export default function ChatsRentItems({userRentItem}) {
 
     const deleteItem = (item) => {
         var filteredArray = chatRentItems.filter(e => e.id !== item.id)
-        console.log(item.id)
         RemoveUserRentItem(item.id).then(() => {
             setChatRentItems(filteredArray)
         })
